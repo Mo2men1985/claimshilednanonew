@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "ClaimShield Nano",
+  "version": "0.1.0",
+  "description": "Lightweight fact-checking assistant with local-first heuristics.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ClaimShield Nano"
+  },
+  "permissions": [],
+  "host_permissions": [
+    "https://www.googleapis.com/*",
+    "https://*.wikipedia.org/*"
+  ]
+}

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClaimShield Nano</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <h1>ClaimShield Nano</h1>
+    <textarea id="cs-claim-input" placeholder="Paste a claim to fact-check..."></textarea>
+    <button id="cs-check-btn">Check claim</button>
+    <div id="cs-result"></div>
+
+    <details id="cs-router-debug" class="cs-debug-section">
+      <summary>Router & Evidence Debug</summary>
+      <div>
+        <div>routerCategory: <span id="cs-router-category"></span></div>
+        <div>routerEvidenceMode: <span id="cs-router-evidence-mode"></span></div>
+        <div>routerIsTemporal: <span id="cs-router-is-temporal"></span></div>
+        <div>web_search_used: <span id="cs-router-web-used"></span></div>
+      </div>
+    </details>
+  </div>
+  <script src="cs_settings.js"></script>
+  <script src="open_web_fetch_google.js"></script>
+  <script src="wikipedia_fetch_fix.js"></script>
+  <script src="ai_local.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
