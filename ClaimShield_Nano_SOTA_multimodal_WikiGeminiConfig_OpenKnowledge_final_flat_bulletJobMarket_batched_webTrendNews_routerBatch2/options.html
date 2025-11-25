@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>ClaimShield Nano — Settings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <div class="cs-options-root">
+    <header class="cs-options-header">
+      <h1>ClaimShield Nano Settings</h1>
+      <p>Configure risk profile, multimodal behavior, and internal tools.</p>
+    </header>
+
+    <section class="cs-options-section">
+      <h2>Multimodal & Evidence</h2>
+      <label class="cs-toggle">
+        <input type="checkbox" id="enableImageOCR" />
+        <span class="cs-toggle-label">
+          Enable image OCR and multimodal analysis
+        </span>
+        <span class="cs-toggle-caption">
+          When on, ClaimShield will attempt to extract text from screenshots/images
+          (using Chrome’s Built-in AI / local OCR, when available).
+        </span>
+      </label>
+
+      <label class="cs-toggle">
+        <input type="checkbox" id="enableWebSearch" />
+        <span class="cs-toggle-label">
+          Enable external web search (future)
+        </span>
+        <span class="cs-toggle-caption">
+          When on, ClaimShield may use trusted external sources beyond Wikipedia.
+          (Currently a stub; safe to leave off.)
+        </span>
+      </label>
+    </section>
+
+    <section class="cs-options-section">
+      <h2>Risk & Safety</h2>
+      <label class="cs-toggle">
+        <input type="checkbox" id="strictRiskMode" />
+        <span class="cs-toggle-label">
+          Strict risk mode (more conservative)
+        </span>
+        <span class="cs-toggle-caption">
+          In strict mode, risk scores are biased upward and more cases are treated
+          as medium/high risk when evidence is weak.
+        </span>
+      </label>
+    </section>
+
+    <section class="cs-options-section">
+      <h2>Debug & Evaluation</h2>
+      <label class="cs-toggle">
+        <input type="checkbox" id="showDebugPanel" />
+        <span class="cs-toggle-label">
+          Show internal risk debug panel
+        </span>
+        <span class="cs-toggle-caption">
+          When enabled, the hidden benchmark panel in the popup can be used to
+          run synthetic risk cases (Ctrl+Shift+D).
+        </span>
+      </label>
+
+      <div class="cs-setting">
+        <label for="csWikipediaBaseUrl">
+          Wikipedia API base URL
+        </label>
+        <input
+          id="csWikipediaBaseUrl"
+          type="text"
+          placeholder="https://en.wikipedia.org"
+          style="width: 100%;"
+        />
+        <p class="cs-help">
+          Default: https://en.wikipedia.org<br />
+          For heavy or commercial use, point this to an official or licensed Wikipedia
+          or mirror endpoint. Must start with <code>https://</code> and should not
+          include a trailing slash.
+        </p>
+      </div>
+
+      <label class="cs-toggle">
+        <input type="checkbox" id="csEnableGeminiImageMode" />
+        <span class="cs-toggle-label">
+          Use AI to analyze images (Gemini image mode)
+        </span>
+        <span class="cs-toggle-caption">
+          When enabled and supported by Chrome's Built-in AI, ClaimShield will send
+          basic image context (alt text, size, description) to an on-device model to
+          detect scam patterns and risky visuals. This is optional and falls back to
+          text-only flags when unavailable.
+        </span>
+      </label>
+    </section>
+
+    <footer class="cs-options-footer">
+      <button id="btnReset" type="button">Reset to defaults</button>
+      <span id="saveStatus" class="cs-save-status"></span>
+    </footer>
+  </div>
+
+  <script src="cs_settings.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

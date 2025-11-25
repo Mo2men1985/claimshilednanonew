@@ -1,0 +1,176 @@
+User selects text on any web page.
+
+Popup or context menu triggers the verification pipeline.
+
+Chrome Summarizer API generates a concise bullet summary.
+
+Local logic / LanguageModel classify the summary into a verdict.
+
+Wikipedia fetcher retrieves matching articles.
+
+Temporal logic (τ) checks if the claim seems to describe events beyond the training cutoff.
+
+If claim is recent and evidence is thin, the system adds pseudo-sources (live search links).
+
+The popup renders a proof card with verdict, reasons, and sources.
+
+Component Responsibilities
+Frontend Layer
+
+popup.html / popup.css
+
+UI layout, styling, tabs for Summary / JSON / Sources.
+
+popup.js
+
+Wires the Verify button.
+
+Calls ai_local.js pipeline.
+
+Renders the structured result and proof card.
+
+Handles mode toggles (Local / Hybrid).
+
+export_markdown.html / export_markdown.js
+
+Export proof cards to Markdown for sharing or offline archiving.
+
+AI Orchestration
+
+ai_local.js
+
+Orchestrates the full pipeline:
+
+Summarize → classify → evidenceFetchSnippets → temporal check → proof card.
+
+Handles Hybrid (Gemini) mode when enabled.
+
+Writes the final structured result into window.LAST.structured for UI and sources renderer.
+
+preload.js
+
+Runs early to wrap:
+
+LanguageModel.create
+
+chrome.ai.languageModel.create
+
+ai.languageModel.create
+
+Ensures every call sets an outputLanguage.
+
+Guards against missing APIs and feature flags.
+
+lang_guard_nuclear.js
+
+Defensive wrapper for Built-in AI:
+
+If the model is not available, it soft-vetoes and routes to evidence-only mode instead of crashing.
+
+Request Pipeline
+
+query_guard.js
+
+Avoids duplicate verifications within a short time window.
+
+Prevents accidental retries from double-clicks.
+
+request_sanitizer.js
+
+Wraps fetch to permit only whitelisted domains:
+
+*.wikipedia.org
+
+news.google.com
+
+generativelanguage.googleapis.com (optional hybrid)
+
+Blocks any unexpected or unsafe outbound requests.
+
+wikipedia_fetch_fix.js
+
+Core evidence function:
+
+Normalizes bullet-style queries (from Summarizer) into clean Wikipedia search terms.
+
+Calls Wikipedia Search API (list=search).
+
+For each hit, calls Wikipedia REST summary endpoint.
+
+Builds a results array of { id, title, url, domain, snippet }.
+
+Temporal pseudo-source tail:
+
+Uses csLooksTemporal(claim) to identify likely recent-event claims.
+
+If zero Wikipedia hits:
+
+Adds pseudo-source for live Wikipedia search.
+
+Adds pseudo-source for live Google News search.
+
+Returns these as sources for the UI.
+
+Sources & UI Rendering
+
+sources_display_fix.js
+
+Listens for updated window.LAST.structured.
+
+Renders a clean Sources panel:
+
+De-duplicates sources.
+
+Shows title, domain, and snippet.
+
+Ensures at least one source is visible (including pseudo-sources).
+
+Background & Content
+
+background.js
+
+MV3 service worker.
+
+Manages context menu entries:
+
+“Verify with ClaimShield” on selected text.
+
+Registers keyboard shortcuts.
+
+content.js
+
+Bridges selected text from the active tab to the popup / background.
+
+Highlight logic could be extended in future.
+
+Temporal Reasoning (τ)
+
+Temporal awareness is implemented as a lightweight heuristic:
+
+csLooksTemporal(claim) checks:
+
+Mentions of years in the near future / recent years.
+
+Phrases like “today”, “yesterday”, “this year”, “current storm”, “latest warning”.
+
+If the claim appears time-sensitive and outside the model’s training window:
+
+The system:
+
+Adds ⏳ markers and a time-window explanation to proof.reasons.
+
+Treats evidence as non-decisive, and leans toward NEEDS_REVIEW / ABSTAIN.
+
+Uses pseudo-sources when necessary instead of pretending to know more than it does.
+
+The resulting structured.proof object includes:
+
+confidence (0–1)
+
+tau (temporal relevance / risk indicator)
+
+abstain boolean
+
+reasons[] including at least one temporal notice when applicable
+
+flags.outdated_model / flags.future_event

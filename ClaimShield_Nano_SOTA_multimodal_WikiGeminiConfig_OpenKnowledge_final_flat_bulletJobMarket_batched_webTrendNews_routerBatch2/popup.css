@@ -1,0 +1,584 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 400px;
+  overflow-x: auto; /* allow horizontal scroll if needed */
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  padding: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #1e293b;
+  box-sizing: border-box;
+}
+
+
+.header {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h1 {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  color: #1e293b;
+}
+
+.tagline {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.control-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.input-key {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.input-section {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
+}
+
+textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  resize: vertical;
+}
+
+.char-counter {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.warning {
+  color: #dc2626;
+  margin-left: 12px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.button-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: #667eea;
+  color: white;
+  flex: 1;
+}
+
+.btn-primary:hover {
+  background: #5568d3;
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.btn-primary.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.btn-secondary {
+  background: white;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.btn-secondary:hover {
+  background: #f8fafc;
+}
+
+.status {
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: #475569;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.results {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.results h3 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+}
+
+.result-verdict {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.verdict-ok {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.verdict-needs_review {
+  background: #fed7aa;
+  color: #9a3412;
+}
+
+.verdict-abstain {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.confidence-bar {
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.confidence-fill {
+  height: 100%;
+  background: #667eea;
+  transition: width 1s ease-out;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 8px;
+  background: rgba(255,255,255,0.7);
+  border: none;
+  border-radius: 6px 6px 0 0;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  background: white;
+  font-weight: 600;
+}
+
+.tab-content {
+  display: none;
+  background: white;
+  border-radius: 0 0 12px 12px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.tab-content.active {
+  display: block;
+}
+
+pre {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 11px;
+  overflow-x: auto;
+  max-height: 300px;
+}
+
+.judge-info {
+  color: #64748b;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.judge-example-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px;
+  margin-bottom: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.judge-example-btn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.testimonial-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.testimonial {
+  background: #f8fafc;
+  border-left: 3px solid #667eea;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.testimonial p {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.testimonial cite {
+  font-size: 12px;
+  color: #64748b;
+  font-style: normal;
+}
+
+.history-item {
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.history-item strong {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.history-item p {
+  margin: 6px 0;
+  font-size: 13px;
+}
+
+.verdict-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Mode badge styles */
+.mode-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 8px;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+.mode-badge.local { background: #e0f2fe; color: #075985; }    /* sky-100 / sky-900 */
+.mode-badge.hybrid { background: #fee2e2; color: #991b1b; }   /* red-100 / red-900 */
+
+#sources, #sources-list, .cs-sources { min-height: 60px; display: block; }
+
+/* Rev 3.3 – Hide legacy internal sources card */
+#sources-list {
+  display: none !important;
+}
+
+/* Popup width guard */
+#app, #root {
+  width: 100%;
+  max-width: 400px;
+  overflow-x: auto;
+}
+
+/* === Rev3.5 Layout & Overflow Fix (merged) === */
+
+/* popup.css - Horizontal scroll fix */
+
+/* Root container constraints */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-width: 400px;  /* Minimum readable width */
+  max-width: 600px;  /* Maximum for popup */
+  overflow-x: auto;  /* Enable horizontal scroll when needed */
+  overflow-y: auto;  /* Keep vertical scroll */
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  padding: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #1e293b;
+}
+
+/* Ensure all containers respect width */
+.header,
+.control-group,
+.input-section,
+.button-group,
+.results,
+.tabs,
+.tab-content {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+}
+
+/* Fix long text overflow */
+.tagline,
+label,
+p {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Prevent input overflow */
+textarea,
+input[type="text"],
+input[type="password"],
+select {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Fix control group wrapping */
+.control-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+/* Ensure toggle groups don't overflow */
+.toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  min-width: 0; /* Allow shrinking */
+  flex: 1 1 auto;
+}
+
+/* Responsive input sizing */
+.input-key {
+  flex: 1;
+  min-width: 120px;
+  padding: 6px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+/* Fix button group overflow */
+.button-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap; /* Prevent button text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Fix tabs overflow */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+  overflow-x: auto; /* Scroll tabs if too many */
+  -webkit-overflow-scrolling: touch;
+}
+
+.tab-btn {
+  flex: 0 0 auto; /* Don't shrink */
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.7);
+  border: none;
+  border-radius: 6px 6px 0 0;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Fix results section */
+.results {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Fix JSON output overflow */
+pre {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 11px;
+  overflow-x: auto; /* Horizontal scroll for JSON */
+  overflow-y: auto;
+  max-height: 300px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Fix sources list overflow */
+#sources-root,
+.cs-sources {
+  max-width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
+
+/* Fix long URLs in sources */
+.cs-sources a {
+  overflow-wrap: break-word;
+  word-break: break-all;
+  hyphens: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 450px) {
+  body {
+    padding: 12px;
+    min-width: 320px;
+  }
+  
+  .control-group {
+    flex-direction: column;
+  }
+  
+  .toggle-group {
+    width: 100%;
+  }
+  
+  button {
+    width: 100%;
+  }
+}
+
+/* Custom scrollbar styling (optional) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.05);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(102, 126, 234, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(102, 126, 234, 0.8);
+}
+
+
+
+/* Outdated model badge */
+.verdict-badge-outdated {
+  background: rgba(248, 180, 0, 0.12);
+  color: #92400e;
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  margin-left: 6px;
+}

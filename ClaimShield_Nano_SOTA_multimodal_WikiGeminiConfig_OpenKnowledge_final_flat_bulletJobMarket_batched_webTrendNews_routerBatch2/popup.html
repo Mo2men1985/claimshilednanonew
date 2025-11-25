@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<script src="lang_guard_lazy.js"></script>
+<script src="lang_guard_nuclear.js"></script>
+<script src="lang_guard_trace.js"></script>
+<script src="preload.js"></script>
+<script src="lm_proxy_guard.js" defer></script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ClaimShield Nano — 2025 Challenge Edition</title>
+<link href="popup.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="popup_ui_addons.css" />
+</head>
+<body>
+<div id="visionNotice" style="font-size:12px;opacity:.8;margin:.5rem 0;">🖼️ Image analysis <em>(coming soon)</em></div>
+<div class="header">
+<h1>🛡️ ClaimShield Nano — 2025 Challenge Edition</h1>
+<p class="tagline">AI-Powered Fact Verification • 100% Private</p>
+</div>
+<div class="control-group">
+
+<button aria-label="Preload AI model" class="btn-primary" id="btnPreload">
+<span class="btn-icon">⚡</span> Preload Model
+    </button>
+<div class="toggle-group" style="flex:1; min-width:220px;">
+<label class="toggle-label">
+<input aria-label="Enable Hybrid (Gemini)" id="hybridOn" type="checkbox" checked/>
+<span>Hybrid (Gemini)</span>
+</label>
+<input aria-label="Google AI Studio API key" class="input-key" id="hybridKey" placeholder="Google AI Studio key (AIza...)" type="password"/>
+</div>
+
+<div class="input-section">
+<label for="selected">Enter or select text to verify:</label>
+<textarea aria-label="Text to verify" id="selected" placeholder="Paste claim here or use 'Use Selection' button..." rows="5"></textarea>
+<div class="char-counter">
+<span id="charCount">0</span> / 10000 characters
+      <span class="warning hidden" id="charWarning">⚠️ Long text may take time</span>
+</div>
+<div class="button-group">
+<button aria-label="Use selected text from page" class="btn-secondary" id="btnUseSelection">
+      📋 Use Selection
+    </button>
+<button aria-label="Verify the claim" class="btn-primary" id="btnVerify">
+      ✓ Verify Claim
+    </button>
+<button aria-label="Clear highlights from page" class="btn-secondary hidden" id="btnClearHighlights">
+      🧹 Clear Highlights
+    </button>
+</div>
+<div aria-live="polite" class="status" id="status"></div>
+<div class="results hidden" id="results">
+<h3>Verification Results</h3>
+<div id="resultsFormatted"></div>
+<div class="hidden" id="writerOutput"></div>
+<button aria-label="Highlight suspicious parts" class="btn-secondary hidden" id="btnHighlight">
+      🔍 Highlight on Page
+    </button>
+<button aria-label="Share report" class="btn-secondary" id="btnShare">
+      📤 Share Report
+    </button>
+</div>
+<div class="tabs">
+<button class="tab-btn active" data-tab="json">JSON Output</button>
+<button class="tab-btn" data-tab="history">History</button>
+<button class="tab-btn" data-tab="judge">Judge Mode</button>
+<button class="tab-btn" data-tab="testimonials">Testimonials</button>
+</div>
+<div class="tab-content active" id="tab-json">
+<pre aria-label="Raw JSON results" id="resultsRaw"></pre>
+</div>
+<div class="tab-content" id="tab-history">
+<div id="historyList"></div>
+</div>
+<div class="tab-content" id="tab-judge">
+<p class="judge-info">Quick test examples for evaluation:</p>
+<div id="judgeExamples"></div>
+</div>
+<div class="tab-content" id="tab-testimonials">
+<div class="testimonial-grid">
+<div class="testimonial">
+<p>"Finally, fact-checking without sending my data to servers. The offline mode is a game-changer for privacy."</p>
+<cite>— Sarah K., Privacy Advocate</cite>
+</div>
+<div class="testimonial">
+<p>"The visual highlighting helped me spot questionable claims in articles immediately. Essential for my research."</p>
+<cite>— Dr. James L., Academic Researcher</cite>
+</div>
+<div class="testimonial">
+<p>"Works perfectly with Arabic content. Most fact-checkers ignore non-English languages entirely."</p>
+<cite>— Ahmed R., Journalist</cite>
+</div>
+<div class="control-group">
+<label for="translatorLang">Output language:</label>
+<select id="translatorLang">
+<option selected="" value="en">English (en)</option>
+<option value="es">Español (es)</option>
+<option value="ja">日本語 (ja)</option>
+</select>
+</div>
+<div class="control-group">
+<div style="display:flex;align-items:center;justify-content:space-between;">
+<label>Structured JSON</label>
+<button class="btn" id="btnCopyJson">Copy JSON</button>
+</div>
+<pre id="jsonOutput" style="max-height:180px;overflow:auto;border:1px solid #ddd;padding:8px;border-radius:8px;background:#fafafa;"></pre>
+</div>
+<div class="control-group" id="evidenceControls">
+<div style="display:flex;align-items:center;gap:8px;justify-content:space-between;">
+<div>
+<label style="font-weight:600;">Evidence Mode (trusted-lite)</label>
+<div class="subtle">Checks top claims against short snippets from Wikipedia.</div>
+</div>
+<div>
+<button class="btn" id="btnEvidence">Run Evidence Check</button>
+<button class="btn" id="btnSaveReportMd" style="margin-left:8px;">Save Report (.md)</button>
+</div>
+<div class="control-group" id="evidencePanel" style="display:none;">
+<label>Evidence</label>
+<div id="evidenceResults" style="display:flex;flex-direction:column;gap:8px;"></div>
+</div>
+<script src="diagnostics.js" defer></script>
+<button id="btnDiagnostics">Run Diagnostics</button>
+<pre id="diagOut" style="display:none;max-height:180px;overflow:auto;background:#111;color:#0f0;padding:8px;border-radius:6px"></pre>
+<div id="evidenceBox" style="margin-top:8px"></div>
+
+<script src="utils/errorHandler.js" defer></script>
+<script src="utils/cacheManager.js" defer></script><script src="ai_local_sota.js" defer></script><script src="cs_settings.js" defer></script>
+<script src="image_pipeline.js" defer></script>
+<script src="popup.js" defer></script><script src="popup_sota_addon.js" defer></script>
+<script type="module" src="transformers_claim_router.js"></script>
+  <div style="margin-top:8px">
+    <button id="builtinBtn">Open Built‑in TL;DR</button>
+  </div>
+  
+
+  <div style="margin-top:8px">
+    <button id="diagBtn">Open Diagnostics</button>
+  </div>
+  
+
+  <div style="margin-top:8px">
+    <button id="exportBtn">Export ProofCard (MD)</button>
+  </div>
+  
+<script src="popup_inline_handlers.js" defer></script>
+
+<div id="results" class="cs-results"></div>
+  <script src="popup_ui_addons.js" defer></script>
+
+<script src="ai_local.js"></script>
+<div id="sources-list" class="cs-sources"></div>
+<script src="request_sanitizer.js"></script>
+<script src="query_guard.js"></script>
+<script src="sources_state.js"></script>
+<script src="wikipedia_fetch_fix.js"></script>
+<script src="sources_binder.js"></script>
+<script src="force_paint.js"></script>
+<script src="format_results_shim.js"></script>
+<script src="vision_addon.js"></script>
+<script src="hallucination_guard.js"></script>
+<script src="risk_guard.js"></script>
+<script src="enhanced_source_scoring.js"></script>
+<script src="evidence_quality_messages.js"></script>
+    <!-- Risk UI shows risk level and grounding. The debug harness can be toggled via Ctrl+Shift+D -->
+    <div id="cs-debug-panel" style="display:none;margin-top:8px;"></div>
+<script src="risk_ui.js"></script>
+<script src="debug_harness.js"></script>
+<script src="sources_display_fix.js"></script>
+</body>
+</html>

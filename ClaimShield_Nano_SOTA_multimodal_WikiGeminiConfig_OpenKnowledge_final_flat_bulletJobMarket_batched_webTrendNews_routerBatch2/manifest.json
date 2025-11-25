@@ -1,0 +1,74 @@
+{
+  "manifest_version": 3,
+  "name": "ClaimShield Nano \u2014 2025 Challenge Edition",
+  "version": "12.2.3",
+  "description": "Privacy-first AI fact-checker. Works 100% offline with Chrome Built-in AI. Optional Gemini hybrid mode.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ClaimShield Nano",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+V"
+      }
+    },
+    "quick-verify": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+C"
+      },
+      "description": "Quick verify selected text"
+    },
+    "verify-selection": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+V",
+        "mac": "Command+Shift+V"
+      },
+      "description": "Verify selected text with ClaimShield"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://*.edx.org/*",
+    "https://*.harvard.edu/*",
+    "https://*.wikipedia.org/*",
+    "https://en.wikipedia.org/*",
+    "https://generativelanguage.googleapis.com/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://*.wikipedia.org https://*.ngrok.io https://localhost:* https://127.0.0.1:* http://localhost:* http://127.0.0.1:* 'self' https://en.wikipedia.org https://generativelanguage.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://upload.wikimedia.org 'self' data: blob:"
+  },
+  "options_page": "options.html"
+}

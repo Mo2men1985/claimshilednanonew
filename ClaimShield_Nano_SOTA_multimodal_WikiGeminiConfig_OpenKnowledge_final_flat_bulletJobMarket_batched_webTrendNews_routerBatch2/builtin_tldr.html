@@ -1,0 +1,86 @@
+<!doctype html>
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>ClaimShield — Built‑in AI TL;DR</title>
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:16px}
+textarea{width:100%;min-height:200px;padding:10px;border-radius:8px;border:1px solid #d0d7de}
+.row{display:flex;gap:8px;margin:12px 0}
+button{padding:10px 14px;border-radius:10px;border:1px solid #c0c8d2;cursor:pointer}
+pre{background:#f6f8fa;padding:12px;border-radius:8px;white-space:pre-wrap}
+.muted{color:#6b7280}
+</style></head>
+<body>
+<h2>Built‑in AI TL;DR (Chrome)</h2>
+<p class="muted">Uses Chrome’s on-device Summarizer API when available.</p>
+<div class="row">
+<button id="sel">Use current selection</button>
+<button id="demo">Demo text</button>
+<span id="status" class="muted">Checking availability…</span>
+</div>
+<textarea id="src" placeholder="Paste or fetch selection…"></textarea>
+<div class="row"><button id="run">Run TL;DR</button><button id="clear">Clear</button></div>
+<h3>Result</h3><pre id="out">–</pre>
+<script>
+(async function(){
+  const $ = (id)=>document.getElementById(id);
+  const status=$("status"), src=$("src"), out=$("out");
+
+  async function availability(){
+    try{
+      if(typeof Summarizer!=="undefined" && Summarizer.availability){
+        const a = await Summarizer.availability();
+        return {impl:"Summarizer", available:(a && a.status) ? a.status : a};
+      }
+      if(typeof ai!=="undefined" && ai.summarizer && ai.summarizer.availability){
+        const a = await ai.summarizer.availability();
+        return {impl:"ai.summarizer", available:(a && a.status) ? a.status : a};
+      }
+      return {impl:"none", available:"unavailable"};
+    }catch(e){ return {impl:"error", available:String(e)}; }
+  }
+
+  async function runTLDR(text){
+    let s;
+    if(typeof Summarizer!=="undefined" && Summarizer.create){
+      s = await Summarizer.create({ type:"key-points" });
+    } else if(typeof ai!=="undefined" && ai.summarizer && ai.summarizer.create){
+      s = await ai.summarizer.create({ type:"key-points" });
+    } else {
+      throw new Error("Built‑in Summarizer API not available on this device.");
+    }
+    const res = await s.summarize(text, { context: "ClaimShield ProofCard TL;DR" });
+    return res;
+  }
+
+  async function getSelectionFromActiveTab(){
+    try{
+      const [tab] = await chrome.tabs.query({active:true,currentWindow:true});
+      if(!tab || !tab.id) throw new Error("No active tab");
+      const [r] = await chrome.scripting.executeScript({
+        target:{tabId:tab.id},
+        func: () => (window.getSelection && window.getSelection().toString()) || (document.activeElement && document.activeElement.value) || ""
+      });
+      return (r && r.result) || "";
+    }catch(e){ console.warn(e); return ""; }
+  }
+
+  $("sel").addEventListener("click", async ()=>{
+    const t = await getSelectionFromActiveTab();
+    if(t) src.value=t; else alert("No selection found. Paste text instead.");
+  });
+  $("demo").addEventListener("click", ()=>{
+    src.value="Chrome built‑in AI enables on‑device summarization. Explain why hybrid (local+cloud) helps for retrieval and reliability.";
+  });
+  $("run").addEventListener("click", async ()=>{
+    const t=(src.value||"").trim(); if(!t) return alert("Paste text or use selection first.");
+    out.textContent="Running…";
+    try{ const res=await runTLDR(t); out.textContent = (typeof res==="string")?res:JSON.stringify(res,null,2); }
+    catch(e){ out.textContent="Error: "+(e && e.message ? e.message : String(e)); }
+  });
+  $("clear").addEventListener("click", ()=>{ src.value=""; out.textContent="–"; });
+
+  const a = await availability();
+  status.textContent = "Availability: "+a.impl+" → "+a.available;
+})();
+</script>
+</body></html>

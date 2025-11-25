@@ -1,0 +1,8 @@
+ClaimShield Nano — H6 Final Changelog
+
+* **Soft‑veto for missing language models**: The `lang_guard_nuclear.js` stub no longer throws "LangGuard NUCLEAR" errors when `LanguageModel`, `ai.languageModel` or `chrome.ai.languageModel` are unavailable.  Instead it logs a warning, calls `__cs_routeNoBuiltInLM`/`__cs_setBanner` to route to evidence mode and returns `null`.
+* **Always‑cited proof data**: Added a `H6safe` setter on `window.LAST.structured` in `ai_local.js`.  This ensures `structured.proof.sources` always has at least one entry and that each claim contains a citations array.  The setter also triggers a re‑render of the Sources section.
+* **Popup sources list**: Added a `renderSources()` function to `popup.js` that builds a "Sources" section at the bottom of the popup.  Exposes `window.__renderSourcesNow` and initializes the list on `DOMContentLoaded`.
+* **Export page refactor**: Created a new `export_markdown.js` file from the inline script in `export_markdown.html`.  Updated the HTML to load this script externally.  Implemented a Sources renderer on the export page matching the popup.
+* **Extended host permissions**: Updated `manifest.json` to include `https://*.wikipedia.org/*`, `https://*.harvard.edu/*` and `https://*.edx.org/*` in addition to the existing permissions.
+* **Documentation**: Added `docs/SUBMISSION.md`, `docs/COMPLIANCE_MATRIX.md`, `docs/ACCESSIBILITY_I18N.md` and `docs/DEMO_SCRIPT.md` detailing the features, requirements compliance, accessibility considerations and a demo script.

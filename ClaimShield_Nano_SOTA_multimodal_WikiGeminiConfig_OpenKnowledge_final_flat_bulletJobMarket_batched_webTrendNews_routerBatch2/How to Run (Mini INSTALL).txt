@@ -1,0 +1,27 @@
+# ClaimShield Nano – AI Genesis Build
+
+## How to run
+
+1. Open Chrome → `chrome://extensions`
+2. Enable **Developer mode**
+3. Click **Load unpacked** and select this folder
+4. Pin **ClaimShield Nano** to your toolbar
+
+## Quick tests
+
+- **Test 1 – Stable fact**
+  > "Harvard University is located in Cambridge, Massachusetts."
+  - Expected: **OK** or **NEEDS_REVIEW** with Wikipedia sources.
+
+- **Test 2 – Controversial / misinformation**
+  > "Vaccines cause autism."
+  - Expected: **NEEDS_REVIEW** or **ABSTAIN**, with clear reasons and reputable sources.
+
+- **Test 3 – Temporal claim (recent event)**
+  > "The National Weather Service is warning Southern California residents to avoid roads due to flooding from an unusually strong storm."
+  - Expected:
+    - Verdict: **NEEDS_REVIEW Hybrid ⏳ Model Outdated**
+    - Reasons include a **time-window notice**
+    - Sources:
+      - "⏳ Recent Event – Limited Sources (Wikipedia)" (live search link)
+      - "📰 Live News Search" (news.google.com link)

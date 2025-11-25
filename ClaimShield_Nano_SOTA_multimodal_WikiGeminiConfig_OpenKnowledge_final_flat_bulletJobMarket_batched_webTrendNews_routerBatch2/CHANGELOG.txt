@@ -1,0 +1,31 @@
+ClaimShield Nano – Perfect Build Changelog
+=========================================
+
+### Version 2025.10.10 (Perfect Final)
+
+This changelog summarizes the consolidation of multiple ClaimShield Nano builds into a single, unified and hardened extension.  The base code was taken from the `ClaimShield_Nano_ROBUST_v2_INTEGRATED` build, and the following modifications and enhancements were applied:
+
+1. **Language‑model readiness improvements**
+   - Replaced the previous `ensureLanguageModelReady()` with an adaptive implementation.  The new function looks for the modern `ai.languageModel` interface (via `chrome.ai`) and falls back to the legacy `LanguageModel` API.  It inspects both `availability()` and `capabilities()` methods, handles experimental `createDownload()` where supported, and downloads the model before returning.  This makes the extension work across different Chrome builds and future API iterations.
+   - Updated `createPromptSession()` to use whichever language‑model interface is available and added a timeout guard.
+
+2. **Global language handling**
+   - Consolidated multiple definitions of `OUTPUT_LANG()` into a single helper at the top of `ai_local.js`.  All other functions, including the Evidence Mode pipeline, now reference this unified helper.  A duplicate definition near the end of the file has been removed.
+
+3. **Evidence Mode pipeline retained and clarified**
+   - Preserved the robust evidence extraction, snippet fetching and comparison logic from the integrated build.  The snippet fetcher continues to query Wikipedia via the classic `action=query` API and falls back to the REST `search/title` endpoint when necessary.  Evidence functions (`evidenceExtractClaims`, `evidenceFetchSnippets`, `evidenceCompareClaim` and `evidenceRunPipeline`) remain exported on `window`, `globalThis` and `self`.
+
+4. **User‑language selection**
+   - The translator drop‑down in `popup.html` is wired to `CLAIMSHIELD_LANG`.  When a user selects a language, the value persists via `chrome.storage.local` and is consumed by all AI calls through `OUTPUT_LANG()`.
+
+5. **Manifest updates**
+   - Incremented the version in `manifest.json` to `2025.10.10` to reflect the final build.
+   - Preserved host permissions for `<all_urls>` and `https://en.wikipedia.org/*` so that Evidence Mode can retrieve snippets.
+
+6. **Build metadata**
+   - Updated `BUILD_INFO.txt` with the new generation date (`2025-10-10`).
+
+7. **Cleanup**
+   - Removed redundant declarations and extraneous comments left over from intermediate builds.  All functions are now exported once via the `ROBUST_EXPORTS_V2` block.
+
+This perfect build merges the best logic from previous versions (robust evidence handling, hybrid and local modes, translator safety, summarization, proofreading and rewriting) while improving compatibility with evolving Chrome AI APIs.  It retains the complete user interface — including translator selection, JSON output, Evidence Mode controls, Hybrid Mode toggles, judge examples and diagnostics — and it is fully compliant with Chrome Manifest V3.

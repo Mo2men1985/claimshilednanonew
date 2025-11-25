@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ClaimShield Nano — Accessibility Enhanced</title>
+<style>
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  body {
+    background: #000;
+    color: #fff;
+  }
+  
+  .header {
+    background: #fff;
+    color: #000;
+    border: 2px solid #000;
+  }
+  
+  button {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus Visible (keyboard navigation) */
+*:focus-visible {
+  outline: 3px solid #667eea;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Skip to main content link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #667eea;
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 9999;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Screen reader only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Better color contrast for verdict badges */
+.verdict-ok {
+  background: #dcfce7;
+  color: #14532d; /* Darker for better contrast */
+  font-weight: 600;
+}
+
+.verdict-needs_review {
+  background: #fef3c7;
+  color: #78350f; /* Darker for better contrast */
+  font-weight: 600;
+}
+
+.verdict-abstain {
+  background: #f1f5f9;
+  color: #1e293b; /* Darker for better contrast */
+  font-weight: 600;
+}
+
+/* Larger touch targets (minimum 44x44px) */
+button, 
+.toggle-label,
+.tab-btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 12px 16px;
+}
+
+/* Clear error states */
+input:invalid,
+textarea:invalid {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+input:invalid + .error-message,
+textarea:invalid + .error-message {
+  display: block;
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.error-message {
+  display: none;
+}
+
+/* Loading state announcement */
+[aria-busy="true"]::before {
+  content: "Loading... ";
+  position: absolute;
+  left: -9999px;
+}
+</style>
+</head>
+<body>
+
+<!-- Skip Link for Keyboard Users -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<div class="header">
+  <h1 id="page-title">
+    <span aria-hidden="true">🛡️</span>
+    ClaimShield Nano
+    <span class="sr-only">— AI-Powered Fact Verification</span>
+  </h1>
+  <p class="tagline" aria-describedby="page-title">
+    AI-Powered Fact Verification • 100% Private
+  </p>
+</div>
+
+<main id="main-content">
+  <div class="control-group">
+    <!-- Toggle with proper ARIA -->
+    <div class="toggle-group">
+      <label class="toggle-label">
+        <input 
+          type="checkbox" 
+          id="writerOn" 
+          aria-label="Enable Writer feature for safer wording suggestions"
+          aria-describedby="writer-description"
+        />
+        <span>Writer</span>
+      </label>
+      <span id="writer-description" class="sr-only">
+        Suggests safer and more neutral wording for claims
+      </span>
+      <button 
+        class="btn-secondary" 
+        id="btnWriterDraft"
+        aria-label="Generate safer wording suggestion"
+        aria-describedby="writer-description"
+        disabled
+      >
+        ✏️ Suggest
+      </button>
+    </div>
+
+    <!-- Preload with progress -->
+    <button 
+      class="btn-primary" 
+      id="btnPreload"
+      aria-label="Preload AI model"
+      aria-describedby="preload-description"
+    >
+      <span class="btn-icon" aria-hidden="true">⚡</span>
+      <span>Preload Model</span>
+    </button>
+    <span id="preload-description" class="sr-only">
+      Downloads the AI model for faster verification. This may take a few minutes on first use.
+    </span>
+
+    <!-- Hybrid mode with validation -->
+    <div class="toggle-group" style="flex:1; min-width:220px;">
+      <label class="toggle-label">
+        <input 
+          type="checkbox" 
+          id="hybridOn" 
+          aria-label="Enable Hybrid mode with Google Gemini"
+          aria-describedby="hybrid-description"
+        />
+        <span>Hybrid (Gemini)</span>
+      </label>
+      <span id="hybrid-description" class="sr-only">
+        Uses Google's Gemini API for enhanced verification. Requires API key.
+      </span>
+      <input 
+        type="password" 
+        class="input-key" 
+        id="hybridKey" 
+        placeholder="Google AI Studio key (AIza...)"
+        aria-label="Google AI Studio API key"
+        pattern="AIza[0-9A-Za-z-_]{35}"
+        autocomplete="off"
+      />
+      <span class="error-message" role="alert">
+        Invalid API key format. Should start with "AIza"
+      </span>
+    </div>
+  </div>
+
+  <!-- Main input with proper labeling -->
+  <div class="input-section">
+    <label for="selected" id="input-label">
+      Enter or select text to verify:
+      <span class="sr-only">
+        Paste a claim, select text from any webpage, or use the "Use Selection" button
+      </span>
+    </label>
+    <textarea 
+      id="selected" 
+      placeholder="Paste claim here or use 'Use Selection' button..."
+      rows="5"
+      aria-labelledby="input-label"
+      aria-describedby="char-count char-warning"
+      maxlength="10000"
+      required
+    ></textarea>
+    <div class="char-counter">
+      <span id="char-count" aria-live="polite">0</span> / 10000 characters
+      <span class="warning hidden" id="char-warning" role="alert">
+        ⚠️ Long text may take time to process
+      </span>
+    </div>
+  </div>
+
+  <!-- Action buttons with states -->
+  <div class="button-group" role="group" aria-label="Verification actions">
+    <button 
+      class="btn-secondary" 
+      id="btnUseSelection"
+      aria-label="Use selected text from current webpage"
+    >
+      📋 Use Selection
+    </button>
+    <button 
+      class="btn-primary" 
+      id="btnVerify"
+      aria-label="Verify the entered claim"
+      aria-describedby="verify-description"
+      disabled
+    >
+      ✓ Verify Claim
+    </button>
+    <span id="verify-description" class="sr-only">
+      Analyzes the text using AI to determine its factual accuracy
+    </span>
+  </div>
+
+  <!-- Status with live region -->
+  <div 
+    class="status" 
+    id="status" 
+    role="status" 
+    aria-live="polite" 
+    aria-atomic="true"
+  ></div>
+
+  <!-- Results with proper heading hierarchy -->
+  <div class="results hidden" id="results">
+    <h2>Verification Results</h2>
+    <div id="resultsFormatted" aria-live="polite"></div>
+    
+    <!-- Actions -->
+    <div role="group" aria-label="Result actions">
+      <button 
+        class="btn-secondary hidden" 
+        id="btnHighlight"
+        aria-label="Highlight suspicious parts on the webpage"
+      >
+        🔍 Highlight on Page
+      </button>
+      <button 
+        class="btn-secondary" 
+        id="btnShare"
+        aria-label="Copy verification report to clipboard"
+      >
+        📤 Share Report
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabs with proper ARIA -->
+  <div class="tabs" role="tablist" aria-label="Verification details">
+    <button 
+      class="tab-btn active" 
+      role="tab"
+      aria-selected="true"
+      aria-controls="tab-json"
+      id="tab-btn-json"
+      data-tab="json"
+    >
+      JSON Output
+    </button>
+    <button 
+      class="tab-btn" 
+      role="tab"
+      aria-selected="false"
+      aria-controls="tab-history"
+      id="tab-btn-history"
+      data-tab="history"
+    >
+      History
+    </button>
+    <button 
+      class="tab-btn" 
+      role="tab"
+      aria-selected="false"
+      aria-controls="tab-judge"
+      id="tab-btn-judge"
+      data-tab="judge"
+    >
+      Judge Mode
+    </button>
+  </div>
+
+  <!-- Tab panels -->
+  <div 
+    class="tab-content active" 
+    id="tab-json"
+    role="tabpanel"
+    aria-labelledby="tab-btn-json"
+    tabindex="0"
+  >
+    <pre id="resultsRaw" aria-label="Raw JSON verification results"></pre>
+  </div>
+
+  <div 
+    class="tab-content" 
+    id="tab-history"
+    role="tabpanel"
+    aria-labelledby="tab-btn-history"
+    tabindex="0"
+    hidden
+  >
+    <h3 class="sr-only">Verification History</h3>
+    <div id="historyList"></div>
+  </div>
+
+  <div 
+    class="tab-content" 
+    id="tab-judge"
+    role="tabpanel"
+    aria-labelledby="tab-btn-judge"
+    tabindex="0"
+    hidden
+  >
+    <h3 class="sr-only">Judge Mode Test Examples</h3>
+    <p class="judge-info">Quick test examples for evaluation:</p>
+    <div id="judgeExamples" role="list"></div>
+  </div>
+</main>
+
+<script>
+// Enhanced tab navigation with ARIA
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    // Update ARIA states
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-selected', 'false');
+    });
+    
+    document.querySelectorAll('.tab-content').forEach(c => {
+      c.classList.remove('active');
+      c.setAttribute('hidden', '');
+    });
+    
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+    
+    const panel = document.getElementById(`tab-${btn.dataset.tab}`);
+    panel.classList.add('active');
+    panel.removeAttribute('hidden');
+    panel.focus();
+  });
+  
+  // Keyboard navigation
+  btn.addEventListener('keydown', (e) => {
+    const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+    const currentIndex = tabs.indexOf(e.target);
+    
+    let nextIndex;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      nextIndex = (currentIndex + 1) % tabs.length;
+      tabs[nextIndex].focus();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+      tabs[nextIndex].focus();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      tabs[0].focus();
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      tabs[tabs.length - 1].focus();
+    }
+  });
+});
+
+// Enable Writer button only when toggle is checked
+document.getElementById('writerOn').addEventListener('change', (e) => {
+  document.getElementById('btnWriterDraft').disabled = !e.target.checked;
+});
+
+// Enable Verify button only when text is present
+document.getElementById('selected').addEventListener('input', (e) => {
+  const hasText = e.target.value.trim().length > 0;
+  document.getElementById('btnVerify').disabled = !hasText;
+  document.getElementById('char-count').textContent = e.target.value.length;
+});
+
+// Announce status changes to screen readers
+const statusObserver = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.type === 'childList' || mutation.type === 'characterData') {
+      console.log('Status updated for screen readers');
+    }
+  });
+});
+
+statusObserver.observe(
+  document.getElementById('status'), 
+  { childList: true, characterData: true, subtree: true }
+);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!doctype html>
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>ClaimShield — Export ProofCard (Markdown)</title>
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:16px}
+textarea{width:100%;min-height:200px;padding:10px;border:1px solid #d0d7de;border-radius:8px}
+.row{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
+button{padding:10px 14px;border-radius:10px;border:1px solid #c0c8d2;cursor:pointer}
+pre{background:#f6f8fa;padding:12px;border-radius:8px;white-space:pre-wrap}
+small{color:#6b7280}
+</style></head>
+<body>
+<h2>Export ProofCard → Markdown</h2>
+<p>Paste your latest result JSON/text, or load from storage (if your flow saves <code>lastProofCard</code> to <code>chrome.storage.local</code>).</p>
+<div class="row">
+  <button id="load">Load from storage</button>
+  <button id="demo">Use demo data</button>
+</div>
+<textarea id="src" placeholder='Paste ProofCard JSON or text here…'></textarea>
+<div class="row">
+  <button id="toMd">Generate Markdown</button>
+  <button id="clear">Clear</button>
+</div>
+<h3>Markdown</h3>
+<pre id="out">–</pre>
+<small>Tip: Copy the markdown into your notes or Devpost.</small>
+<script src="export_markdown.js"></script>
+</body></html>

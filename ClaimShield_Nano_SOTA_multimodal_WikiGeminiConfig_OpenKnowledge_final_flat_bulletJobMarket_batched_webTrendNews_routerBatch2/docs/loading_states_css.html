@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+/* Enhanced Loading States */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+  height: 20px;
+  margin: 8px 0;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.progress-bar {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.progress-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: width 0.3s ease;
+}
+
+.progress-bar-indeterminate {
+  animation: indeterminate 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes indeterminate {
+  0% { left: -35%; right: 100%; }
+  60% { left: 100%; right: -90%; }
+  100% { left: 100%; right: -90%; }
+}
+
+/* Status Messages with Icons */
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status.loading::before {
+  content: "⏳";
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.status.success::before {
+  content: "✅";
+}
+
+.status.error::before {
+  content: "❌";
+}
+
+.status.warning::before {
+  content: "⚠️";
+}
+
+/* Button Loading State */
+.btn-primary.loading {
+  position: relative;
+  color: transparent;
+  pointer-events: none;
+}
+
+.btn-primary.loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Step Progress Indicator */
+.step-progress {
+  display: flex;
+  justify-content: space-between;
+  margin: 16px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step-progress li {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  color: #94a3b8;
+  position: relative;
+  padding-bottom: 24px;
+}
+
+.step-progress li::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  border: 2px solid #e2e8f0;
+}
+
+.step-progress li.active::before {
+  background: #667eea;
+  border-color: #667eea;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.step-progress li.completed::before {
+  background: #10b981;
+  border-color: #10b981;
+  content: "✓";
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Toast Notifications */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 350px;
+  animation: slideUp 0.3s ease-out;
+  z-index: 9999;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.toast.success {
+  border-left: 4px solid #10b981;
+}
+
+.toast.error {
+  border-left: 4px solid #ef4444;
+}
+
+.toast.warning {
+  border-left: 4px solid #f59e0b;
+}
+
+/* Pulsing Animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+</style>
+</head>
+<body>
+<h2>ClaimShield Loading States Demo</h2>
+
+<div class="status loading">
+  Analyzing claim...
+</div>
+
+<div class="progress-bar">
+  <div class="progress-bar-fill progress-bar-indeterminate"></div>
+</div>
+
+<ul class="step-progress">
+  <li class="completed">Summarize</li>
+  <li class="active">Classify</li>
+  <li>Evidence</li>
+  <li>Results</li>
+</ul>
+
+<button class="btn-primary loading">
+  Verify Claim
+</button>
+
+<div class="loading-skeleton"></div>
+<div class="loading-skeleton" style="width: 80%;"></div>
+<div class="loading-skeleton" style="width: 60%;"></div>
+
+<div class="toast success">
+  <span>✅</span>
+  <div>
+    <strong>Verification Complete</strong>
+    <div style="font-size: 12px; color: #64748b;">Confidence: 87%</div>
+  </div>
+</div>
+</body>
+</html>
